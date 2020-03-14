@@ -16,6 +16,7 @@
     this.oldX = 0;
     this.oldY = 0;
 
+    this.gap = this.config.gap; // 安全边距
     this.areaId = 0;  // 区域 ID（0：左上，1：右上，2：左下，3：右下）
 
     this.init();
@@ -25,8 +26,9 @@
 
   Mydrag.config = {
     adsorb: true, // 是否自动吸附边缘
-    initX: 0, // 初始 x 坐标
-    initY: 0 // 初始 y 坐标
+    initX: 0, // 初始 x 坐标（单位 px）
+    initY: 0, // 初始 y 坐标（单位 px）
+    gap: 10,  // 安全边距（单位 px）
   };
 
   Mydrag.events = {
@@ -137,30 +139,30 @@
      */
     detectEdge() {
       var isOverflow = false;
-      
+
       var elemL = this.x;
       var elemR = elemL + this.rect.width;
       var elemT = this.y;
       var elemB = elemT + this.rect.height;
 
-      var limitL = 0;
-      var limitR = this.winW - this.rect.width;
-      var limitT = 0;
-      var limitB = this.winH - this.rect.height;
+      var limitL = this.gap;
+      var limitR = this.winW - this.rect.width - this.gap;
+      var limitT = this.gap;
+      var limitB = this.winH - this.rect.height - this.gap;
 
-      if (elemL <= 0) {
+      if (elemL <= this.gap) {
         isOverflow = true;
         this.x = limitL;
       }
-      if (elemR >= this.winW) {
+      if (elemR >= this.winW - this.gap) {
         isOverflow = true;
         this.x = limitR;
       }
-      if (elemT <= 0) {
+      if (elemT <= this.gap) {
         isOverflow = true;
         this.y = limitT;
       }
-      if (elemB >= this.winH) {
+      if (elemB >= this.winH - this.gap) {
         isOverflow = true;
         this.y = limitB;
       }
