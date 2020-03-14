@@ -26,6 +26,12 @@
     initY: 0 // 初始 y 坐标
   };
 
+  Mydrag.events = {
+    TOUCH_START: 'touchstart',
+    TOUCH_MOVE: 'touchmove',
+    TOUCH_END: 'touchend'
+  };
+
   Mydrag.prototype = {
     init() {
       this.rect = this.elem.getBoundingClientRect();
@@ -40,15 +46,11 @@
      * 添加事件监听
      */
     startListening() {
-      this.elem.addEventListener('touchstart', this.moveStart.bind(this));
+      var isPassive = this.detectPassive();
 
-      this.elem.addEventListener(
-        'touchmove',
-        this.moving.bind(this),
-        this.detectPassive()
-      );
-
-      this.elem.addEventListener('touchend', this.moveEnd.bind(this));
+      this.elem.addEventListener('touchstart', this);
+      this.elem.addEventListener('touchmove', this, isPassive);
+      this.elem.addEventListener('touchend', this);
     },
     /**
      * 移除事件监听
@@ -57,6 +59,28 @@
       this.elem.removeEventListener('touchstart', this.moveStart);
       this.elem.removeEventListener('touchmove', this.moving);
       this.elem.removeEventListener('touchend', this.moveEnd);
+    },
+    /**
+     * 被 EventListener 调用
+     * 详见：https://developer.mozilla.org/zh-CN/docs/Web/API/EventListener
+     * @param {Object} e 事件对象
+     */
+    handleEvent(e) {
+      return (function (eType, events) {
+        switch (eType) {
+          case events.TOUCH_START:
+            this.moveStart(e);
+            break;
+          case events.TOUCH_MOVE:
+            this.moving(e);
+            break;
+          case events.TOUCH_END:
+            this.moveEnd(e);
+            break;
+          default:
+            break;
+        }
+      }.bind(this))(e.type, Mydrag.events);
     },
     moveStart(event) {
       var ev = (event.touches && event.touches[0]) || event;
