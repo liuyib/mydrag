@@ -98,6 +98,8 @@
       // 初始元素坐标
       this.setPos(this.config.initX, this.config.initY);
 
+      // 移除已存在的监听事件
+      this.stopListener();
       // 监听鼠标事件
       this.startListening();
     },
