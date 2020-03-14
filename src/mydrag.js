@@ -41,6 +41,7 @@
   // 用户可配置的 API
   Mydrag.config = {
     adsorb: true,  // 是否自动吸附边缘
+    rate: 4,       // 吸附动画的缓冲速率
     initX: 0,      // 初始 x 坐标（单位 px）
     initY: 0,      // 初始 y 坐标（单位 px）
     gap: 10,       // 安全边距   （单位 px）
@@ -157,8 +158,9 @@
       } else if (this.areaId === 1 || this.areaId === 3) {
         targetX = this.limit.r;
       }
+      var rate = this.config.rate;
       // 执行吸附动画
-      this.easeout(this.x, targetX, 4, function (val) {
+      this.easeout(this.x, targetX, rate, function (val) {
         this.x = val;
         this.setPos(this.x, this.y);
       }.bind(this));
@@ -238,7 +240,7 @@
 
       var a = oldPos || 0;
       var b = newPos || 0;
-      var r = rate || 2;
+      var r = rate || 4;
       var reqId = null;
       var step = function () {
         a = a + (b - a) / r; // 算法核心
