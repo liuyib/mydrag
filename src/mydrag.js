@@ -3,6 +3,8 @@
 
   function Mydrag(elem, options) {
     this.elem = document.querySelector(elem);
+    this.rect = null;
+
     this.config = this.mergeConfig(options);
 
     this.x = 0;
@@ -26,7 +28,45 @@
 
   Mydrag.prototype = {
     init() {
+      this.rect = this.elem.getBoundingClientRect();
+
+      // 初始元素坐标
+      this.setPos(this.config.initX, this.config.initY);
+
+      // 开始监听鼠标事件
       this.startListening();
+    },
+    /**
+     * 添加事件监听
+     */
+    startListening() {
+      this.elem.addEventListener('mousedown', this.moveStart.bind(this));
+      this.elem.addEventListener('touchstart', this.moveStart.bind(this));
+
+      document.addEventListener(
+        'mousemove',
+        this.moving.bind(this),
+        this.detectPassive()
+      );
+      this.elem.addEventListener(
+        'touchmove',
+        this.moving.bind(this),
+        this.detectPassive()
+      );
+
+      this.elem.addEventListener('mouseup', this.moveEnd.bind(this));
+      this.elem.addEventListener('touchend', this.moveEnd.bind(this));
+    },
+    /**
+     * 移除事件监听
+     */
+    stopListener() {
+      this.elem.removeEventListener('mousedown', this.moveStart);
+      this.elem.removeEventListener('mousemove', this.moving);
+      this.elem.removeEventListener('mouseup', this.moveEnd);
+      this.elem.removeEventListener('touchstart', this.moveStart);
+      this.elem.removeEventListener('touchmove', this.moving);
+      this.elem.removeEventListener('touchend', this.moveEnd);
     },
     moveStart(event) {
       var ev = (event.touches && event.touches[0]) || event;
@@ -46,53 +86,15 @@
       var deltaY = ev.clientY - this.oldY;
 
       // 元素当前坐标
-      var x = this.x + deltaX;
-      var y = this.y + deltaY;
+      this.x = this.config.initX + deltaX;
+      this.y = this.config.initY + deltaY;
 
       // 应用新坐标
-      this.setPos(x, y);
-
-      this.log({ x, y });
+      this.setPos(this.x, this.y);
     },
     moveEnd() {
       this.isMove = false;
       this.stopListener();
-    },
-    /**
-     * 添加事件监听
-     */
-    startListening() {
-      var ctx = this;
-
-      this.elem.addEventListener('mousedown', ctx.moveStart.bind(ctx));
-      this.elem.addEventListener('touchstart', ctx.moveStart.bind(ctx));
-
-      document.addEventListener(
-        'mousemove',
-        ctx.moving.bind(ctx),
-        ctx.detectPassive()
-      );
-      this.elem.addEventListener(
-        'touchmove',
-        ctx.moving.bind(ctx),
-        ctx.detectPassive()
-      );
-
-      this.elem.addEventListener('mouseup', ctx.moveEnd.bind(ctx));
-      this.elem.addEventListener('touchend', ctx.moveEnd.bind(ctx));
-    },
-    /**
-     * 移除事件监听
-     */
-    stopListener() {
-      var ctx = this;
-
-      this.elem.removeEventListener('mousedown', ctx.moveStart);
-      this.elem.removeEventListener('mousemove', ctx.moving);
-      this.elem.removeEventListener('mouseup', ctx.moveEnd);
-      this.elem.removeEventListener('touchstart', ctx.moveStart);
-      this.elem.removeEventListener('touchmove', ctx.moving);
-      this.elem.removeEventListener('touchend', ctx.moveEnd);
     },
     /**
      * 设置当前坐标
@@ -141,19 +143,6 @@
         }
       }
       return newOptions;
-    },
-    log(obj) {
-      var log = document.querySelector('#log');
-      var result = '';
-      for (const key in obj) {
-        var isOwnProperty =
-          Object.prototype.hasOwnProperty.call(obj, key);
-        if (isOwnProperty) {
-          const val = obj[key];
-          result += `${key}: ${val}\n`;
-        }
-      }
-      log.value = result;
     }
   };
 })();
