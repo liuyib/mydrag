@@ -1,8 +1,36 @@
+/**
+ * @file        mydrag.js
+ * @author      liuyib(https://github.com/liuyib)
+ * @date        2020/3/15
+ * @version     1.0.0
+ * @description 拖动任意元素，自动吸附边缘
+ */
+
 (function() {
   'use strict';
 
-  function Mydrag(elem, options) {
-    this.elem = document.querySelector(elem);
+  /**
+   * Mydrag 类
+   * 
+   * @class
+   * @param {string}  selector  （必须）元素的选择器
+   * @param {Object=}  options  （可选）配置参数
+   * @param {boolean=} options.adsorb  （可选）是否自动吸附边缘。默认 true。
+   * @param {number=}  options.rate    （可选）吸附动画的缓冲速率。数值越大，缓冲动画执行越慢。默认 5。
+   * @param {number=}  options.initX   （可选）初始 x 坐标。默认 0。
+   * @param {number=}  options.initY   （可选）初始 y 坐标。默认 0。
+   * @param {number=}  options.gap     （可选）安全边距。默认 10px。
+   * @example
+   *   new Mydrag('#root', {
+   *     adsorb: false,
+   *     rate: 10,
+   *     initX: 100,
+   *     initY: 100,
+   *     gap: 20,
+   *   });
+   */
+  function Mydrag(selector, options) {
+    this.elem = document.querySelector(selector);
     // 元素的 getBoundingClientRect 对象
     this.rect = null;
 
@@ -41,7 +69,7 @@
   // 用户可配置的 API
   Mydrag.config = {
     adsorb: true,  // 是否自动吸附边缘
-    rate: 4,       // 吸附动画的缓冲速率
+    rate: 5,       // 吸附动画的缓冲速率
     initX: 0,      // 初始 x 坐标（单位 px）
     initY: 0,      // 初始 y 坐标（单位 px）
     gap: 10,       // 安全边距   （单位 px）
@@ -55,6 +83,9 @@
   };
 
   Mydrag.prototype = {
+    /**
+     * 初始化函数
+     */
     init() {
       this.rect = this.elem.getBoundingClientRect();
 
@@ -90,18 +121,39 @@
     /**
      * 被 EventListener 调用
      * 详见：https://developer.mozilla.org/zh-CN/docs/Web/API/EventListener
-     * @param {Object} e 事件对象
+     * 
+     * @fires (User#touchstart | User#touchmove | User#touchend)
+     * @param  {Object} e （必须）事件对象
+     * @return {function(string, Object)} 立即执行函数
      */
     handleEvent(e) {
       return (function (eType, events) {
         switch (eType) {
           case events.TOUCH_START:
+            /**
+             * 用户触摸元素时触发
+             * 
+             * @event User#touchstart
+             * @param {Object} e （必须）事件对象
+             */
             this.moveStart(e);
             break;
           case events.TOUCH_MOVE:
+            /**
+             * 用户移动元素时触发
+             * 
+             * @event User#touchmove
+             * @param {Object} e （必须）事件对象
+             */
             this.moving(e);
             break;
           case events.TOUCH_END:
+            /**
+             * 用户释放元素时触发
+             * 
+             * @event User#touchend
+             * @param {Object} e （必须）事件对象
+             */
             this.moveEnd(e);
             break;
           default:
@@ -111,7 +163,8 @@
     },
     /**
      * 触摸元素时调用
-     * @param {Object} event 事件对象
+     * 
+     * @param {Object} event （必须）事件对象
      */
     moveStart(event) {
       var ev = (event.touches && event.touches[0]) || event;
@@ -122,7 +175,8 @@
     },
     /**
      * 移动元素时调用
-     * @param {Object} event 事件对象
+     * 
+     * @param {Object} event （必须）事件对象
      */
     moving(event) {
       var ev = (event.touches && event.touches[0]) || event;
@@ -217,8 +271,9 @@
     },
     /**
      * 设置当前坐标
-     * @param {number} x 横坐标
-     * @param {number} y 竖坐标
+     * 
+     * @param {number} x （必须）横坐标
+     * @param {number} y （必须）竖坐标
      */
     setPos(x, y) {
       var newX = Math.round(1000 * x) / 1000;
@@ -229,34 +284,38 @@
     },
     /**
      * EaseOut 动画算法
-     * @param {number} oldPos 起始位置
-     * @param {number} newPos 目标位置
-     * @param {number} rate 缓动速率
-     * @param {Function} callback 位置变化的回调
-     *   接收两个参数。param1：当前位置的值，param2：动画是否结束
+     * 
+     * @param {number} oldPos （必须）起始位置
+     * @param {number} newPos （必须）目标位置
+     * @param {number=} rate  （可选）缓动速率
+     * @param {function(number, boolean)} callback （可选）位置变化的回调
+     *    接收两个参数，param1：当前位置的值，param2：动画是否结束
      */
     easeout(oldPos, newPos, rate, callback) {
       if (oldPos === newPos) return;
 
       var a = oldPos || 0;
       var b = newPos || 0;
-      var r = rate || 4;
+      var r = rate || 5;
       var reqId = null;
       var step = function () {
         a = a + (b - a) / r; // 算法核心
 
         if (Math.abs(b - a) < 1) {
           cancelAnimationFrame(reqId);
-          callback(b, true);
+          callback && callback(b, true);
           return;
         }
-        callback(a, false);
+        callback && callback(a, false);
         reqId = requestAnimationFrame(step);
       };
       step();
     },
     /**
      * 检测当前环境是否支持 addEventListener 的 passive 参数
+     * 
+     * @return {(Object | boolean)} 当前环境支持 passive 参数时
+     *    返回 { passive: false }，否则返回 false
      */
     detectPassive() {
       var passiveSupported = false;
@@ -275,7 +334,9 @@
     },
     /**
      * 合并配置参数
-     * @param {Object} options 配置参数
+     * 
+     * @param {Object} options （必须）配置参数
+     * @return {Object} 处理后的配置参数
      */
     mergeConfig(options) {
       var newOptions = Mydrag.config;
