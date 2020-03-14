@@ -1,0 +1,22 @@
+{
+  "name": "mydrag",
+  "version": "1.0.0",
+  "description": "🐾 Drag any element on mobile device",
+  "homepage": "https://github.com/liuyib/mydrag",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/liuyib/mydrag"
+  },
+  "keywords": [
+    "drag"
+  ],
+  "author": "liuyib",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/liuyib/mydrag/issues"
+  }
+}
