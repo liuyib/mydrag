@@ -91,10 +91,52 @@
 
       // 应用新坐标
       this.setPos(this.x, this.y);
+
+      // 边缘检测
+      this.detectEdge();
     },
     moveEnd() {
       this.isMove = false;
       this.stopListener();
+    },
+    /**
+     * 边缘检测
+     */
+    detectEdge() {
+      var isOverflow = false;
+      var winW = window.innerWidth;
+      var winH = window.innerHeight;
+      
+      var elemL = this.x;
+      var elemR = elemL + this.rect.width;
+      var elemT = this.y;
+      var elemB = elemT + this.rect.height;
+
+      var limitL = 0;
+      var limitR = winW - this.rect.width;
+      var limitT = 0;
+      var limitB = winH - this.rect.height;
+
+      if (elemL <= 0) {
+        isOverflow = true;
+        this.x = limitL;
+      }
+      if (elemR >= winW) {
+        isOverflow = true;
+        this.x = limitR;
+      }
+      if (elemT <= 0) {
+        isOverflow = true;
+        this.y = limitT;
+      }
+      if (elemB >= winH) {
+        isOverflow = true;
+        this.y = limitB;
+      }
+
+      if (isOverflow) {
+        this.setPos(this.x, this.y);
+      }
     },
     /**
      * 设置当前坐标
