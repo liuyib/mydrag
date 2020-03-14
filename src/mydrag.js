@@ -40,30 +40,20 @@
      * 添加事件监听
      */
     startListening() {
-      this.elem.addEventListener('mousedown', this.moveStart.bind(this));
       this.elem.addEventListener('touchstart', this.moveStart.bind(this));
 
-      document.addEventListener(
-        'mousemove',
-        this.moving.bind(this),
-        this.detectPassive()
-      );
       this.elem.addEventListener(
         'touchmove',
         this.moving.bind(this),
         this.detectPassive()
       );
 
-      this.elem.addEventListener('mouseup', this.moveEnd.bind(this));
       this.elem.addEventListener('touchend', this.moveEnd.bind(this));
     },
     /**
      * 移除事件监听
      */
     stopListener() {
-      this.elem.removeEventListener('mousedown', this.moveStart);
-      this.elem.removeEventListener('mousemove', this.moving);
-      this.elem.removeEventListener('mouseup', this.moveEnd);
       this.elem.removeEventListener('touchstart', this.moveStart);
       this.elem.removeEventListener('touchmove', this.moving);
       this.elem.removeEventListener('touchend', this.moveEnd);
