@@ -1,8 +1,6 @@
-window.addEventListener('DOMContentLoaded', function() {
-  new Mydrag('#root', {
-    adsorb: true,
-    initX: 100,
-    initY: 100,
-    gap: 20,
-  });
-});
+var initDrag = function() {
+  new Mydrag('#root');
+};
+
+window.addEventListener('DOMContentLoaded', initDrag);
+window.addEventListener('resize', initDrag);

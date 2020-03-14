@@ -5,8 +5,17 @@
 
 #root {
   position: absolute;
-  width: 50px;
-  height: 50px;
-  background-color: red;
+  width: 100px;
+  height: 100px;
+  line-height: 100px;
   border-radius: 50%;
+  background-color: red;
+  color: #fff;
+  text-align: center;
+}
+
+.tip {
+  margin-top: 10px;
+  color: #999;
+  text-align: center;
 }
