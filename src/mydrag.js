@@ -16,6 +16,13 @@
     this.oldX = 0;
     this.oldY = 0;
 
+    // 元素的限制范围
+    this.limit = {
+      l: 0, // left
+      r: 0, // right
+      t: 0, // top
+      b: 0, // bottom
+    };
     this.gap = this.config.gap; // 安全边距
     this.areaId = 0;  // 区域 ID（0：左上，1：右上，2：左下，3：右下）
 
@@ -40,6 +47,11 @@
   Mydrag.prototype = {
     init() {
       this.rect = this.elem.getBoundingClientRect();
+
+      this.limit.l = this.gap;
+      this.limit.r = this.winW - this.rect.width - this.gap;
+      this.limit.t = this.gap;
+      this.limit.b = this.winH - this.rect.height - this.gap;
 
       // 初始元素坐标
       this.setPos(this.config.initX, this.config.initY);
@@ -116,6 +128,18 @@
     },
     moveEnd() {
       this.stopListener();
+
+      // 根据元素释放时所在的区域来吸附边缘
+      var targetX = this.x;
+      if (this.areaId === 0 || this.areaId === 2) {
+        targetX = this.limit.l;
+      } else if (this.areaId === 1 || this.areaId === 3) {
+        targetX = this.limit.r;
+      }
+      this.easeout(this.x, targetX, 4, function (val) {
+        this.x = val;
+        this.setPos(this.x, this.y);
+      }.bind(this));
     },
     /**
      * 区域检测（屏幕均分为四个区域）
@@ -127,11 +151,11 @@
       if (this.x < centerX && this.y < centerY) {
         this.areaId = 0;
       } else if (this.x > centerX && this.y < centerY) {
-        this.areaId = 2;
+        this.areaId = 1;
       } else if (this.x < centerX && this.y > centerY) {
-        this.areaId = 3;
+        this.areaId = 2;
       } else if (this.x > centerX && this.y > centerY) {
-        this.areaId = 4;
+        this.areaId = 3;
       }
     },
     /**
@@ -145,26 +169,21 @@
       var elemT = this.y;
       var elemB = elemT + this.rect.height;
 
-      var limitL = this.gap;
-      var limitR = this.winW - this.rect.width - this.gap;
-      var limitT = this.gap;
-      var limitB = this.winH - this.rect.height - this.gap;
-
       if (elemL <= this.gap) {
         isOverflow = true;
-        this.x = limitL;
+        this.x = this.limit.l;
       }
       if (elemR >= this.winW - this.gap) {
         isOverflow = true;
-        this.x = limitR;
+        this.x = this.limit.r;
       }
       if (elemT <= this.gap) {
         isOverflow = true;
-        this.y = limitT;
+        this.y = this.limit.t;
       }
       if (elemB >= this.winH - this.gap) {
         isOverflow = true;
-        this.y = limitB;
+        this.y = this.limit.b;
       }
 
       if (isOverflow) {
@@ -182,6 +201,34 @@
       var val = [newX + 'px', newY + 'px', 0].join(',');
 
       this.elem.style.transform = 'translate3d(' + val + ')';
+    },
+    /**
+     * EaseOut 动画算法
+     * @param {number} oldPos 起始位置
+     * @param {number} newPos 目标位置
+     * @param {number} rate 缓动速率
+     * @param {Function} callback 位置变化的回调
+     *   接收两个参数。param1：当前位置的值，param2：动画是否结束
+     */
+    easeout(oldPos, newPos, rate, callback) {
+      if (oldPos === newPos) return;
+
+      var a = oldPos || 0;
+      var b = newPos || 0;
+      var r = rate || 2;
+      var reqId = null;
+      var step = function () {
+        a = a + (b - a) / r; // 算法核心
+
+        if (Math.abs(b - a) < 1) {
+          cancelAnimationFrame(reqId);
+          callback(b, true);
+          return;
+        }
+        callback(a, false);
+        reqId = requestAnimationFrame(step);
+      };
+      step();
     },
     /**
      * 检测当前环境是否支持 addEventListener 的 passive 参数
