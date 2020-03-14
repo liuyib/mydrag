@@ -11,6 +11,8 @@
     this.oldX = 0;
     this.oldY = 0;
 
+    this.isMove = false;
+
     this.init();
   }
 
@@ -26,50 +28,71 @@
     init() {
       this.startListening();
     },
+    moveStart(event) {
+      var ev = (event.touches && event.touches[0]) || event;
+
+      // 开始移动时的坐标
+      this.oldX = this.oldX || ev.clientX;
+      this.oldY = this.oldY || ev.clientY;
+
+      this.isMove = true;
+    },
+    moving(event) {
+      if (!this.isMove) return;
+      var ev = (event.touches && event.touches[0]) || event;
+
+      // 移动的距离
+      var deltaX = ev.clientX - this.oldX;
+      var deltaY = ev.clientY - this.oldY;
+
+      // 元素当前坐标
+      var x = this.x + deltaX;
+      var y = this.y + deltaY;
+
+      // 应用新坐标
+      this.setPos(x, y);
+
+      this.log({ x, y });
+    },
+    moveEnd() {
+      this.isMove = false;
+      this.stopListener();
+    },
     /**
      * 添加事件监听
      */
     startListening() {
       var ctx = this;
 
-      this.elem.addEventListener('touchstart', function(event) {
-        var ev = event.touches[0] || event;
+      this.elem.addEventListener('mousedown', ctx.moveStart.bind(ctx));
+      this.elem.addEventListener('touchstart', ctx.moveStart.bind(ctx));
 
-        // 开始移动时的坐标
-        ctx.oldX = ctx.oldX || ev.clientX;
-        ctx.oldY = ctx.oldY || ev.clientY;
-      });
-
+      document.addEventListener(
+        'mousemove',
+        ctx.moving.bind(ctx),
+        ctx.detectPassive()
+      );
       this.elem.addEventListener(
         'touchmove',
-        function(event) {
-          var ev = event.touches[0] || event;
-
-          // 移动的距离
-          var deltaX = ev.clientX - ctx.oldX;
-          var deltaY = ev.clientY - ctx.oldY;
-
-          // 元素当前坐标
-          var x = ctx.x + deltaX;
-          var y = ctx.y + deltaY;
-
-          // 应用新坐标
-          ctx.setPos(x, y);
-
-          ctx.log({ x, y });
-        },
+        ctx.moving.bind(ctx),
         ctx.detectPassive()
       );
 
-      this.elem.addEventListener('touchend', function() {});
+      this.elem.addEventListener('mouseup', ctx.moveEnd.bind(ctx));
+      this.elem.addEventListener('touchend', ctx.moveEnd.bind(ctx));
     },
     /**
      * 移除事件监听
      */
     stopListener() {
-      this.elem.removeEventListener('touchstart');
-      this.elem.removeEventListener('touchmove');
-      this.elem.removeEventListener('touchend');
+      var ctx = this;
+
+      this.elem.removeEventListener('mousedown', ctx.moveStart);
+      this.elem.removeEventListener('mousemove', ctx.moving);
+      this.elem.removeEventListener('mouseup', ctx.moveEnd);
+      this.elem.removeEventListener('touchstart', ctx.moveStart);
+      this.elem.removeEventListener('touchmove', ctx.moving);
+      this.elem.removeEventListener('touchend', ctx.moveEnd);
     },
     /**
      * 设置当前坐标
