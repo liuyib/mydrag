@@ -7,13 +7,16 @@
 
     this.config = this.mergeConfig(options);
 
+    this.winW = window.innerWidth;
+    this.winH = window.innerHeight;
+
     this.x = 0;
     this.y = 0;
 
     this.oldX = 0;
     this.oldY = 0;
 
-    this.isMove = false;
+    this.areaId = 0;  // 区域 ID（0：左上，1：右上，2：左下，3：右下）
 
     this.init();
   }
@@ -88,11 +91,8 @@
       // 开始移动时的坐标
       this.oldX = this.oldX || ev.clientX;
       this.oldY = this.oldY || ev.clientY;
-
-      this.isMove = true;
     },
     moving(event) {
-      if (!this.isMove) return;
       var ev = (event.touches && event.touches[0]) || event;
 
       // 移动的距离
@@ -108,18 +108,35 @@
 
       // 边缘检测
       this.detectEdge();
+
+      // 区域检测
+      this.detectArea();
     },
     moveEnd() {
-      this.isMove = false;
       this.stopListener();
+    },
+    /**
+     * 区域检测（屏幕均分为四个区域）
+     */
+    detectArea() {
+      var centerX = this.winW / 2;
+      var centerY = this.winH / 2;
+
+      if (this.x < centerX && this.y < centerY) {
+        this.areaId = 0;
+      } else if (this.x > centerX && this.y < centerY) {
+        this.areaId = 2;
+      } else if (this.x < centerX && this.y > centerY) {
+        this.areaId = 3;
+      } else if (this.x > centerX && this.y > centerY) {
+        this.areaId = 4;
+      }
     },
     /**
      * 边缘检测
      */
     detectEdge() {
       var isOverflow = false;
-      var winW = window.innerWidth;
-      var winH = window.innerHeight;
       
       var elemL = this.x;
       var elemR = elemL + this.rect.width;
@@ -127,15 +144,15 @@
       var elemB = elemT + this.rect.height;
 
       var limitL = 0;
-      var limitR = winW - this.rect.width;
+      var limitR = this.winW - this.rect.width;
       var limitT = 0;
-      var limitB = winH - this.rect.height;
+      var limitB = this.winH - this.rect.height;
 
       if (elemL <= 0) {
         isOverflow = true;
         this.x = limitL;
       }
-      if (elemR >= winW) {
+      if (elemR >= this.winW) {
         isOverflow = true;
         this.x = limitR;
       }
@@ -143,7 +160,7 @@
         isOverflow = true;
         this.y = limitT;
       }
-      if (elemB >= winH) {
+      if (elemB >= this.winH) {
         isOverflow = true;
         this.y = limitB;
       }
