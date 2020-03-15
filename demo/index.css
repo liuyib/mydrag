@@ -4,7 +4,9 @@
 }
 
 #root {
-  position: absolute;
+  position: fixed;
+  left: 0;
+  top: 0;
   width: 100px;
   height: 100px;
   line-height: 100px;
@@ -12,6 +14,11 @@
   background-color: red;
   color: #fff;
   text-align: center;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  -o-user-select: none;
+  user-select: none;
 }
 
 .tip {
