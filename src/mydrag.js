@@ -219,19 +219,21 @@
       // 移除事件监听器
       this.stopListener();
 
-      // 根据元素释放时所在的区域，判断要吸附的边缘
-      var targetX = this.x;
-      if (this.areaId === 0 || this.areaId === 2) {
-        targetX = this.limit.l;
-      } else if (this.areaId === 1 || this.areaId === 3) {
-        targetX = this.limit.r;
+      if (this.config.adsorb) {
+        // 根据元素释放时所在的区域，判断要吸附的边缘
+        var targetX = this.x;
+        if (this.areaId === 0 || this.areaId === 2) {
+          targetX = this.limit.l;
+        } else if (this.areaId === 1 || this.areaId === 3) {
+          targetX = this.limit.r;
+        }
+        var rate = this.config.rate;
+        // 执行吸附动画
+        this.easeout(this.x, targetX, rate, function (val) {
+          this.x = val;
+          this.setPos(this.x, this.y);
+        }.bind(this));
       }
-      var rate = this.config.rate;
-      // 执行吸附动画
-      this.easeout(this.x, targetX, rate, function (val) {
-        this.x = val;
-        this.setPos(this.x, this.y);
-      }.bind(this));
     },
     /**
      * 区域检测（屏幕均分为四个区域）
