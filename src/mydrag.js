@@ -107,12 +107,14 @@ Mydrag.fn = Mydrag.prototype = {
     var initX = this.config.initX;
     var initY = this.config.initY;
     if (initX < this.gap || initX > this.limit.r) {
-      this.initX = Mydrag.config.initX + this.gap;
+      initX = Mydrag.config.initX + this.gap;
     }
     if (initY < this.gap || initY > this.limit.b) {
-      this.initY = Mydrag.config.initY + this.gap;
+      initY = Mydrag.config.initY + this.gap;
     }
-    this.setPos(this.initX, this.initY);
+    this.initX = initX;
+    this.initY = initY;
+    this.setPos(initX, initY);
   },
   /**
    * 添加事件监听
