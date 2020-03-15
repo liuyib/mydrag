@@ -103,10 +103,10 @@
       var initX = this.config.initX;
       var initY = this.config.initY;
       if (initX < this.gap || initX > this.limit.r) {
-        this.initX = Mydrag.config.initX + Mydrag.config.gap;
+        this.initX = Mydrag.config.initX + this.gap;
       }
       if (initY < this.gap || initY > this.limit.b) {
-        this.initY = Mydrag.config.initY + Mydrag.config.gap;
+        this.initY = Mydrag.config.initY + this.gap;
       }
       this.setPos(this.initX, this.initY);
 
@@ -181,7 +181,8 @@
      * @param {Object} event （必须）事件对象
      */
     moveStart(event) {
-      var ev = (event.touches && event.touches[0]) || event;
+      if (event.cancelable) event.preventDefault();
+      var ev = (event.touches && event.touches[0]) || event || window.event;
 
       // 开始移动时的坐标
       this.oldX = this.oldX || ev.clientX;
@@ -193,7 +194,8 @@
      * @param {Object} event （必须）事件对象
      */
     moving(event) {
-      var ev = (event.touches && event.touches[0]) || event;
+      if (event.cancelable) event.preventDefault();
+      var ev = (event.touches && event.touches[0]) || event || window.event;
 
       // 移动的距离
       var deltaX = ev.clientX - this.oldX;
