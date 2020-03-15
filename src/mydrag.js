@@ -41,7 +41,11 @@
     this.winW = window.innerWidth;
     this.winH = window.innerHeight;
 
-    // 元素最初的坐标
+    // 初始化坐标
+    this.initX = 0;
+    this.initY = 0;
+
+    // 记录开始移动时的坐标
     this.oldX = 0;
     this.oldY = 0;
 
@@ -95,8 +99,16 @@
       this.limit.t = this.gap;
       this.limit.b = this.winH - this.rect.height - this.gap;
 
-      // 初始元素坐标
-      this.setPos(this.config.initX, this.config.initY);
+      // 初始化元素坐标（超出范围时，使用初始值）
+      var initX = this.config.initX;
+      var initY = this.config.initY;
+      if (initX < this.gap || initX > this.limit.r) {
+        this.initX = Mydrag.config.initX + Mydrag.config.gap;
+      }
+      if (initY < this.gap || initY > this.limit.b) {
+        this.initY = Mydrag.config.initY + Mydrag.config.gap;
+      }
+      this.setPos(this.initX, this.initY);
 
       // 移除已存在的监听事件
       this.stopListener();
@@ -188,8 +200,8 @@
       var deltaY = ev.clientY - this.oldY;
 
       // 元素当前坐标
-      this.x = this.config.initX + deltaX;
-      this.y = this.config.initY + deltaY;
+      this.x = this.initX + deltaX;
+      this.y = this.initY + deltaY;
 
       // 应用新坐标
       this.setPos(this.x, this.y);
@@ -341,7 +353,7 @@
      * @return {Object} 处理后的配置参数
      */
     mergeConfig(options) {
-      var newOptions = Mydrag.config;
+      var newOptions = JSON.parse(JSON.stringify(Mydrag.config));
       if (options) {
         for (var key in options) {
           var isOwnProperty =
