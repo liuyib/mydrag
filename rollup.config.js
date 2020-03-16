@@ -11,7 +11,8 @@ export default {
     {
       file: './dist/mydrag.min.js',
       format: 'umd',
-      name: 'mydrag',
+      // 生成 iife / umd 包的名称
+      name: 'Mydrag',
       plugins: [terser()]
     }
   ],
