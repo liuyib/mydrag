@@ -1,11 +1,11 @@
 {
   "name": "mydrag",
-  "version": "1.0.0",
+  "version": "1.0.0-rc.0",
   "description": "🐾 Drag any element on mobile device",
   "homepage": "https://github.com/liuyib/mydrag",
-  "main": "index.js",
+  "main": "dist/mydrag.min.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build": "rollup -c"
   },
   "repository": {
     "type": "git",
@@ -18,5 +18,11 @@
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/liuyib/mydrag/issues"
+  },
+  "devDependencies": {
+    "@rollup/plugin-commonjs": "^11.0.2",
+    "@rollup/plugin-node-resolve": "^7.1.1",
+    "rollup": "^2.0.6",
+    "rollup-plugin-terser": "^5.3.0"
   }
 }
