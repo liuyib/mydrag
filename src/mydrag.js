@@ -6,7 +6,8 @@
  * @description 拖动任意元素，自动吸附边缘
  */
 
-(function(window) {
+// eslint-disable-next-line no-shadow-restricted-names
+(function(window, undefined) {
 'use strict';
 
 /**
@@ -348,11 +349,11 @@ Mydrag.fn = Mydrag.prototype = {
    *    返回 { passive: false }，否则返回 false
    */
   detectPassive() {
-    var passiveSupported = false;
+    var passive = false;
     try {
       var options = Object.defineProperty({}, 'passive', {
         get: function() {
-          passiveSupported = true;
+          passive = true;
           return true;
         }
       });
@@ -360,7 +361,7 @@ Mydrag.fn = Mydrag.prototype = {
       window.removeEventListener('test', null);
     // eslint-disable-next-line no-empty
     } catch (err) {}
-    return passiveSupported ? { passive: false } : false;
+    return passive ? { passive: false } : false;
   },
   /**
    * 合并配置参数
@@ -369,18 +370,16 @@ Mydrag.fn = Mydrag.prototype = {
    * @return {Object} 处理后的配置参数
    */
   mergeConfig(options) {
-    var newOptions = JSON.parse(JSON.stringify(Mydrag.config));
-    if (options) {
-      for (var key in options) {
-        var isOwnProperty =
-          Object.prototype.hasOwnProperty.call(options, key);
-        if (isOwnProperty) {
-          var val = options[key];
-          newOptions[key] = val;
-        }
+    var params = {};
+    var defaults = Mydrag.config;
+    for (var key in defaults) {
+      if (options && options[key] !== undefined) {
+        params[key] = options[key];
+      } else {
+        params[key] = defaults[key];
       }
     }
-    return newOptions;
+    return params;
   }
 };
 
