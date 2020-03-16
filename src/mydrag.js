@@ -63,10 +63,8 @@
       this.config = this.mergeConfig(options);
 
       // 窗口尺寸
-      // FIXME: 有些浏览器里，当旋转设备屏幕时，window.innerWidth / window.innerHeight 获取到的值不正确
-      //    用 jQuery 的 width() / height() 就没问题
-      this.winW = window.innerWidth;
-      this.winH = window.innerHeight;
+      this.winW = this.getWin().width;
+      this.winH = this.getWin().height;
 
       // 移动之前的坐标
       this.initX = 0;
@@ -304,8 +302,8 @@
      * 窗口大小改变时调用
      */
     resize: function() {
-      this.winW = window.innerWidth;
-      this.winH = window.innerHeight;
+      this.winW = this.getWin().width;
+      this.winH = this.getWin().height;
       this.initData();
     },
     /**
@@ -430,6 +428,20 @@
       }
 
       return params;
+    },
+    /**
+     * 获取浏览器中 Window 对象的宽高
+     *
+     * @return {Object} 返回以 width 和 height 为属性的对象
+     * @example
+     *    getWin().width  |  getWin().height
+     */
+    getWin: function() {
+      var docElem = window.document.documentElement;
+      return {
+        width: docElem.clientWidth,
+        height: docElem.clientHeight
+      };
     }
   };
 
