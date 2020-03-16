@@ -48,7 +48,8 @@
   Mydrag.events = {
     TOUCH_START: 'touchstart',
     TOUCH_MOVE: 'touchmove',
-    TOUCH_END: 'touchend'
+    TOUCH_END: 'touchend',
+    RESIZE: 'resize'
   };
 
   Mydrag.fn = Mydrag.prototype = {
@@ -70,6 +71,14 @@
       // 移动之前的坐标
       this.initX = 0;
       this.initY = 0;
+
+      // 用户触摸元素时的坐标
+      this.oldX = 0;
+      this.oldY = 0;
+
+      // 用户释放元素时的坐标
+      this.newX = 0;
+      this.newY = 0;
 
       // 元素当前坐标
       this.x = 0;
@@ -115,8 +124,8 @@
         initY = Mydrag.config.initY + this.gap;
       }
 
-      this.initX = initX;
-      this.initY = initY;
+      this.initX = this.oldX = this.newX = initX;
+      this.initY = this.oldY = this.newY = initY;
       this.setPos(initX, initY);
     },
     /**
@@ -128,6 +137,7 @@
       this.elem.addEventListener('touchstart', this);
       this.elem.addEventListener('touchmove', this, isPassive);
       this.elem.addEventListener('touchend', this);
+      window.addEventListener('resize', this);
     },
     /**
      * 移除事件监听
@@ -136,12 +146,13 @@
       this.elem.removeEventListener('touchstart', this.touchStart);
       this.elem.removeEventListener('touchmove', this.touchMove);
       this.elem.removeEventListener('touchend', this.touchEnd);
+      window.removeEventListener('resize', this.resize);
     },
     /**
      * 被 EventListener 调用
      * 详见：https://developer.mozilla.org/zh-CN/docs/Web/API/EventListener
      *
-     * @fires (User#touchstart | User#touchmove | User#touchend)
+     * @fires (User#touchstart | User#touchmove | User#touchend | Window#resize)
      * @param  {Object} e （必须）事件对象
      * @return {function(string, Object)} 立即执行函数
      */
@@ -175,6 +186,14 @@
              */
             this.touchEnd(e);
             break;
+          case events.RESIZE:
+            /**
+             * 窗口大小改变时调用
+             *
+             * @event Window#resize
+             */
+            this.resize();
+            break;
           default:
             break;
         }
@@ -195,16 +214,16 @@
       this.isTouching = true;
 
       // 每次移动前的初始坐标是上一次移动后的坐标
-      if (this.elem.newX) {
-        this.initX = this.elem.newX;
+      if (this.newX) {
+        this.initX = this.newX;
       }
-      if (this.elem.newY) {
-        this.initY = this.elem.newY;
+      if (this.newY) {
+        this.initY = this.newY;
       }
 
       // 缓存 touchstart 时的坐标
-      this.elem.oldX = ev.clientX;
-      this.elem.oldY = ev.clientY;
+      this.oldX = ev.clientX;
+      this.oldY = ev.clientY;
     },
     /**
      * 移动元素时调用
@@ -222,8 +241,8 @@
       var ev = (event.touches && event.touches[0]) || event;
 
       // 移动的距离
-      var deltaX = ev.clientX - this.elem.oldX;
-      var deltaY = ev.clientY - this.elem.oldY;
+      var deltaX = ev.clientX - this.oldX;
+      var deltaY = ev.clientY - this.oldY;
 
       // 元素当前坐标
       this.x = this.initX + deltaX;
@@ -233,8 +252,8 @@
       this.setPos(this.x, this.y);
 
       // 缓存新的坐标（被用作下一次移动之前的初始坐标）
-      this.elem.newX = this.x;
-      this.elem.newY = this.y;
+      this.newX = this.x;
+      this.newY = this.y;
 
       // 边缘检测
       this.detectEdge();
@@ -270,16 +289,24 @@
 
           if (calcX !== undefined) {
             this.x = calcX;
-            this.elem.newX = calcX;
+            this.newX = calcX;
             this.setPos(this.x, this.y);
             requestAnimationFrame(anime);
           } else {
-            this.elem.newX = targetX;
+            this.newX = targetX;
           }
         }.bind(this);
 
         anime();
       }
+    },
+    /**
+     * 窗口大小改变时调用
+     */
+    resize: function() {
+      this.winW = window.innerWidth;
+      this.winH = window.innerHeight;
+      this.initData();
     },
     /**
      * 区域检测（屏幕均分为左右两个区域）
