@@ -61,16 +61,14 @@ Mydrag.fn = Mydrag.prototype = {
     this.config = this.mergeConfig(options);
 
     // 窗口尺寸
+    // FIXME: 有些浏览器里，当旋转设备屏幕时，window.innerWidth / window.innerHeight 获取到的值不正确
+    //    用 jQuery 的 width() / height() 就没问题
     this.winW = window.innerWidth;
     this.winH = window.innerHeight;
 
-    // 初始化坐标
+    // 移动之前的坐标
     this.initX = 0;
     this.initY = 0;
-
-    // 记录开始移动时的坐标
-    this.oldX = 0;
-    this.oldY = 0;
 
     // 元素当前坐标
     this.x = 0;
@@ -185,9 +183,17 @@ Mydrag.fn = Mydrag.prototype = {
     if (event.cancelable) event.preventDefault();
     var ev = (event.touches && event.touches[0]) || event || window.event;
 
-    // 开始移动时的坐标
-    this.oldX = this.oldX || ev.clientX;
-    this.oldY = this.oldY || ev.clientY;
+    // 每次移动前的初始坐标是上一次移动后的坐标
+    if (this.elem.newX) {
+      this.initX = this.elem.newX;
+    }
+    if (this.elem.newY) {
+      this.initY = this.elem.newY;
+    }
+
+    // 缓存 touchstart 时的坐标
+    this.elem.oldX = ev.clientX;
+    this.elem.oldY = ev.clientY;
   },
   /**
    * 移动元素时调用
@@ -199,8 +205,8 @@ Mydrag.fn = Mydrag.prototype = {
     var ev = (event.touches && event.touches[0]) || event || window.event;
 
     // 移动的距离
-    var deltaX = ev.clientX - this.oldX;
-    var deltaY = ev.clientY - this.oldY;
+    var deltaX = ev.clientX - this.elem.oldX;
+    var deltaY = ev.clientY - this.elem.oldY;
 
     // 元素当前坐标
     this.x = this.initX + deltaX;
@@ -208,6 +214,10 @@ Mydrag.fn = Mydrag.prototype = {
 
     // 应用新坐标
     this.setPos(this.x, this.y);
+
+    // 缓存新的坐标（被用作下一次移动之前的初始坐标）
+    this.elem.newX = this.x;
+    this.elem.newY = this.y;
 
     // 边缘检测
     this.detectEdge();
@@ -234,6 +244,7 @@ Mydrag.fn = Mydrag.prototype = {
       // 执行吸附动画
       this.easeout(this.x, targetX, rate, function (val) {
         this.x = val;
+        this.elem.newX = val;
         this.setPos(this.x, this.y);
       }.bind(this));
     }
