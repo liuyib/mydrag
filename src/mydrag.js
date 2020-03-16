@@ -86,6 +86,8 @@ Mydrag.fn = Mydrag.prototype = {
     this.gap = this.config.gap;
     // 区域 ID（0：屏幕左半边，1：屏幕右半边）
     this.areaId = 0;
+    // 用户是否正在触摸元素
+    this.isTouching = false;
 
     this.initData();
     this.startListening();
@@ -184,6 +186,8 @@ Mydrag.fn = Mydrag.prototype = {
     if (event.cancelable) event.preventDefault();
     var ev = (event.touches && event.touches[0]) || event || window.event;
 
+    this.isTouching = true;
+
     // 每次移动前的初始坐标是上一次移动后的坐标
     if (this.elem.newX) {
       this.initX = this.elem.newX;
@@ -202,6 +206,9 @@ Mydrag.fn = Mydrag.prototype = {
    * @param {Object} event （必须）事件对象
    */
   moving(event) {
+    if (!this.isTouching) {
+      return;
+    }
     if (event.cancelable) event.preventDefault();
     var ev = (event.touches && event.touches[0]) || event || window.event;
 
@@ -230,24 +237,35 @@ Mydrag.fn = Mydrag.prototype = {
    * 释放元素时调用
    */
   moveEnd() {
+    if (!this.isTouching) {
+      return;
+    }
+    this.isTouching = false;
     // 移除事件监听器
     this.stopListener();
 
     if (this.config.adsorb) {
-      // 根据元素释放时所在的区域，判断要吸附的边缘
-      var targetX = this.x;
-      if (this.areaId === 0) {
-        targetX = this.limit.l;
-      } else if (this.areaId === 1) {
-        targetX = this.limit.r;
-      }
+      var minX = this.limit.l;
+      var maxX = this.limit.r;
+      var area = this.areaId;
       var rate = this.config.rate;
-      // 执行吸附动画
-      this.easeout(this.x, targetX, rate, function (val) {
-        this.x = val;
-        this.elem.newX = val;
-        this.setPos(this.x, this.y);
-      }.bind(this));
+      var targetX = area === 0 ? minX : (area === 1 ? maxX : this.x);
+
+      var anime = function () {
+        if (this.isTouching) {
+          return;
+        }
+        var calcX = this.easeout(this.x, targetX, rate);
+        if (calcX !== undefined) {
+          this.x = calcX;
+          this.elem.newX = calcX;
+          this.setPos(this.x, this.y);
+          requestAnimationFrame(anime);
+        } else {
+          this.elem.newX = targetX;
+        }
+      }.bind(this);
+      anime();
     }
   },
   /**
@@ -310,28 +328,23 @@ Mydrag.fn = Mydrag.prototype = {
    * @param {number} oldPos （必须）起始位置
    * @param {number} newPos （必须）目标位置
    * @param {number=} rate  （可选）缓动速率
-   * @param {function(number, boolean)} callback （可选）位置变化的回调
-   *    接收两个参数，param1：当前位置的值，param2：动画是否结束
+   * @return {number} 根据起始位置计算一次后的数值
    */
-  easeout(oldPos, newPos, rate, callback) {
+  easeout(oldPos, newPos, rate) {
     if (oldPos === newPos) return;
 
     var a = oldPos || 0;
     var b = newPos || 0;
     var r = rate || 5;
-    var reqId = null;
-    var step = function () {
-      a = a + (b - a) / r; // 算法核心
 
-      if (Math.abs(b - a) < 1) {
-        cancelAnimationFrame(reqId);
-        callback && callback(b, true);
-        return;
-      }
-      callback && callback(a, false);
-      reqId = requestAnimationFrame(step);
-    };
-    step();
+    // 算法核心
+    a = a + (b - a) / r;
+
+    if (Math.abs(b - a) < 1) {
+      return b;
+    }
+
+    return a;
   },
   /**
    * 检测当前环境是否支持 addEventListener 的 passive 参数
