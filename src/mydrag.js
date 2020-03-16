@@ -84,7 +84,7 @@ Mydrag.fn = Mydrag.prototype = {
     };
     // 安全边距
     this.gap = this.config.gap;
-    // 区域 ID（0：左上，1：右上，2：左下，3：右下）
+    // 区域 ID（0：屏幕左半边，1：屏幕右半边）
     this.areaId = 0;
 
     this.initData();
@@ -236,9 +236,9 @@ Mydrag.fn = Mydrag.prototype = {
     if (this.config.adsorb) {
       // 根据元素释放时所在的区域，判断要吸附的边缘
       var targetX = this.x;
-      if (this.areaId === 0 || this.areaId === 2) {
+      if (this.areaId === 0) {
         targetX = this.limit.l;
-      } else if (this.areaId === 1 || this.areaId === 3) {
+      } else if (this.areaId === 1) {
         targetX = this.limit.r;
       }
       var rate = this.config.rate;
@@ -251,21 +251,12 @@ Mydrag.fn = Mydrag.prototype = {
     }
   },
   /**
-   * 区域检测（屏幕均分为四个区域）
+   * 区域检测（屏幕均分为左右两个区域）
    */
   detectArea() {
-    var centerX = this.winW / 2;
-    var centerY = this.winH / 2;
-
-    if (this.x < centerX && this.y < centerY) {
-      this.areaId = 0;
-    } else if (this.x > centerX && this.y < centerY) {
-      this.areaId = 1;
-    } else if (this.x < centerX && this.y > centerY) {
-      this.areaId = 2;
-    } else if (this.x > centerX && this.y > centerY) {
-      this.areaId = 3;
-    }
+    var winCenterX = this.winW / 2;
+    var elemCenterX = this.x + this.rect.width / 2;
+    this.areaId = elemCenterX < winCenterX ? 0 : 1;
   },
   /**
    * 边缘检测
