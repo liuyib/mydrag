@@ -1,0 +1,26 @@
+{
+  "name": "mydrag",
+  "version": "1.0.0-rc.0",
+  "description": "🐾 Drag any element on mobile device",
+  "homepage": "https://github.com/liuyib/mydrag",
+  "main": "dist/mydrag.min.js",
+  "authors": [
+    "liuyib"
+  ],
+  "license": "MIT",
+  "keywords": [
+    "drag",
+    "mobile"
+  ],
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests",
+    "demo",
+    "package.json",
+    "package-lock.json",
+    "rollup.*.js"
+  ]
+}
