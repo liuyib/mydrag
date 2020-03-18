@@ -6,14 +6,52 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta http-equiv="X-UA-Compatible" content="ie=edge" />
   <title>index</title>
-  <link rel="stylesheet" href="./index.css">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      color: #555;
+      font-family: 'PingFang SC', 'Microsoft YaHei', sans-serif, Arial;
+    }
+
+    .drag {
+      position: fixed;
+      left: 0;
+      top: 0;
+      width: 100px;
+      height: 100px;
+      border: 1px solid #999;
+      border-radius: 3px;
+      background-color: #fff;
+      text-align: center;
+      cursor: move;
+      -webkit-user-select: none;
+      -moz-user-select: none;
+      -ms-user-select: none;
+      -o-user-select: none;
+      user-select: none;
+    }
+
+    .tip {
+      margin-top: 10px;
+      color: #999;
+      text-align: center;
+    }
+
+  </style>
 </head>
 
 <body>
   <p class="tip">PC 端请打开控制台，使用移动模式预览效果</p>
-  <div id="root">Drag Me!</div>
+  <div class="drag drag1">我可以被拖拽并吸附边缘</div>
+  <div class="drag drag2">我可以被拖拽并停在那里</div>
+  <div class="drag drag3">我可以吸附边缘，但是速度很慢</div>
+  <div class="drag drag4">我可以被拖拽，但是要距离边缘 50px</div>
 
-  <script src="../src/mydrag.js"></script>
+  <script src="../dist/mydrag.min.js"></script>
   <script src="./index.js"></script>
 </body>
 
