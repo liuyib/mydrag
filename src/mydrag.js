@@ -2,7 +2,7 @@
  * @file        mydrag.js
  * @author      liuyib(https://github.com/liuyib)
  * @date        2020/3/15
- * @version     1.0.0
+ * @version     1.0.0-rc.0
  * @description 拖动任意元素，自动吸附边缘
  */
 
@@ -19,9 +19,9 @@
  * @param {number=}  options.initY   （可选）初始 y 坐标。默认 0。
  * @param {number=}  options.gap     （可选）安全边距。默认 10px。
  * @example
- *   1. Mydrag('#root');    |   new Mydrag('#root');
+ *   1. Mydrag('#drag');    |   new Mydrag('#drag');
  *
- *   2. Mydrag('#root', {   |   new Mydrag('#root', {
+ *   2. Mydrag('#drag', {   |   new Mydrag('#drag', {
  *        adsorb: false,    |         adsorb: false,
  *        rate: 10,         |         rate: 10,
  *        initX: 100,       |         initX: 100,
