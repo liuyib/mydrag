@@ -453,4 +453,4 @@ Mydrag.fn = Mydrag.prototype = {
 
 Mydrag.fn.init.prototype = Mydrag.fn;
 
-export default Mydrag;
+module.exports = Mydrag;

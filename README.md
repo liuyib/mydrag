@@ -9,6 +9,9 @@
   <a href="https://www.npmjs.com/package/mydrag" target="_blank" rel="noopener noreferrer">
     <img alt="npm" src="https://img.shields.io/npm/dt/mydrag.svg?style=flat-square">
   </a>
+  <a href="https://codecov.io/gh/liuyib/mydrag" target="_blank" rel="noopener noreferrer">
+    <img src="https://codecov.io/gh/liuyib/mydrag/branch/master/graph/badge.svg?style=flat-square" />
+  </a>
 </p>
 
 [简体中文](https://github.com/liuyib/mydrag/blob/master/README.md) | [English](https://github.com/liuyib/mydrag/blob/master/README_en-US.md)
