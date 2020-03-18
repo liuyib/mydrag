@@ -54,6 +54,12 @@ Mydrag.fn = Mydrag.prototype = {
   constructor: Mydrag,
   init: function(selector, options) {
     this.elem = document.querySelector(selector);
+
+    if (!this.elem) {
+      console.error('Unable to find element by selector "' + selector + '"');
+      return;
+    }
+
     // 元素的 getBoundingClientRect 方法的返回值
     this.rect = null;
 
