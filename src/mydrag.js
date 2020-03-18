@@ -380,11 +380,13 @@ Mydrag.fn = Mydrag.prototype = {
     var a = oldPos || 0;
     var b = newPos || 0;
     var r = rate || 5;
+    // 判定运动结束的阈值（当两次移动的距离差小于该值时，判定运动结束）
+    var MOVE_END_THRESHOLD = 0.2;
 
     // 算法核心
     a = a + (b - a) / r;
 
-    if (Math.abs(b - a) < 1) {
+    if (Math.abs(b - a) < MOVE_END_THRESHOLD) {
       return b;
     }
 
