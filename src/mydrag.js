@@ -360,9 +360,9 @@ Mydrag.fn = Mydrag.prototype = {
   setPos: function(x, y) {
     var newX = Math.round(1000 * x) / 1000;
     var newY = Math.round(1000 * y) / 1000;
-    var val = [newX + 'px', newY + 'px', 0].join(',');
+    var val = [newX + 'px', newY + 'px'].join(',');
 
-    this.elem.style.transform = 'translate3d(' + val + ')';
+    this.elem.style.transform = 'translate(' + val + ')';
   },
   /**
    * EaseOut 动画算法
