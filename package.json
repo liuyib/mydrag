@@ -3,7 +3,9 @@
   "version": "1.0.0-rc.0",
   "description": "🐾 Drag any element on mobile device",
   "homepage": "https://github.com/liuyib/mydrag",
-  "main": "dist/mydrag.min.js",
+  "main": "src/mydrag.js",
+  "jsdelivr": "dist/mydrag.min.js",
+  "unpkg": "dist/mydrag.min.js",
   "scripts": {
     "dev": "rollup -c --watch",
     "dev:test": "npm run lint && npm run test:cover",
