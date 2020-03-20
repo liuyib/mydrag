@@ -8,10 +8,10 @@
   "unpkg": "dist/mydrag.min.js",
   "scripts": {
     "dev": "rollup -c --watch",
-    "dev:test": "npm run lint && npm run test:cover",
-    "build": "rollup -c",
+    "dev:test": "npm run lint && npm run test:cover -- --watch",
+    "build": "npm run lint:fix && rollup -c",
     "test": "npm run lint && npm run test:cover && npm run test:codecov",
-    "test:cover": "./node_modules/.bin/istanbul cover ./node_modules/mocha/bin/_mocha",
+    "test:cover": "./node_modules/.bin/istanbul cover ./node_modules/mocha/bin/_mocha -- --recursive",
     "test:codecov": "cat ./coverage/lcov.info | ./node_modules/.bin/codecov",
     "lint": "eslint src",
     "lint:fix": "npm run lint --fix"
@@ -32,12 +32,12 @@
   "devDependencies": {
     "@rollup/plugin-commonjs": "^11.0.2",
     "@rollup/plugin-node-resolve": "^7.1.1",
+    "chai": "^4.2.0",
     "codecov": "^3.6.5",
     "eslint": "^6.8.0",
     "istanbul": "^0.4.5",
     "mocha": "^7.1.1",
     "rollup": "^2.0.6",
-    "rollup-plugin-terser": "^5.3.0",
-    "should": "^13.2.3"
+    "rollup-plugin-terser": "^5.3.0"
   }
 }

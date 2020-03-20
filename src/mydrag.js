@@ -8,6 +8,8 @@
 
 'use strict';
 
+var utils = require('./utils');
+
 /**
  * Mydrag 类
  *
@@ -64,11 +66,11 @@ Mydrag.fn = Mydrag.prototype = {
     this.rect = null;
 
     // 配置参数
-    this.config = this.mergeConfig(options);
+    this.config = utils.mergeConfig(Mydrag.config, options);
 
     // 窗口尺寸
-    this.winW = this.getWin().width;
-    this.winH = this.getWin().height;
+    this.winW = utils.getWinSize().width;
+    this.winH = utils.getWinSize().height;
 
     // 移动之前的坐标
     this.initX = 0;
@@ -134,7 +136,7 @@ Mydrag.fn = Mydrag.prototype = {
    * 添加事件监听
    */
   addListening: function() {
-    var isPassive = this.detectPassive();
+    var isPassive = utils.detectPassive();
 
     this.elem.addEventListener('touchstart', this);
     this.elem.addEventListener('touchmove', this, isPassive);
@@ -287,7 +289,7 @@ Mydrag.fn = Mydrag.prototype = {
           return;
         }
 
-        var calcX = this.easeout(this.x, targetX, rate);
+        var calcX = utils.easeout(this.x, targetX, rate);
 
         if (calcX !== undefined) {
           this.x = calcX;
@@ -306,8 +308,8 @@ Mydrag.fn = Mydrag.prototype = {
    * 窗口大小改变时调用
    */
   resize: function() {
-    this.winW = this.getWin().width;
-    this.winH = this.getWin().height;
+    this.winW = utils.getWinSize().width;
+    this.winH = utils.getWinSize().height;
     this.initData();
   },
   /**
@@ -363,91 +365,6 @@ Mydrag.fn = Mydrag.prototype = {
     var val = [newX + 'px', newY + 'px'].join(',');
 
     this.elem.style.transform = 'translate(' + val + ')';
-  },
-  /**
-   * EaseOut 动画算法
-   *
-   * @param {number} oldPos （必须）起始位置
-   * @param {number} newPos （必须）目标位置
-   * @param {number=} rate  （可选）缓动速率
-   * @return {number} 根据起始位置计算一次后的数值
-   */
-  easeout: function(oldPos, newPos, rate) {
-    if (oldPos === newPos) {
-      return;
-    }
-
-    var a = oldPos || 0;
-    var b = newPos || 0;
-    var r = rate || 5;
-    // 判定运动结束的阈值（当两次移动的距离差小于该值时，判定运动结束）
-    var MOVE_END_THRESHOLD = 0.2;
-
-    // 算法核心
-    a = a + (b - a) / r;
-
-    if (Math.abs(b - a) < MOVE_END_THRESHOLD) {
-      return b;
-    }
-
-    return a;
-  },
-  /**
-   * 检测当前环境是否支持 addEventListener 的 passive 参数
-   *
-   * @return {(Object | boolean)} 当前环境支持 passive 参数时
-   *    返回 { passive: false }，否则返回 false
-   */
-  detectPassive: function() {
-    var passive = false;
-
-    try {
-      var options = Object.defineProperty({}, 'passive', {
-        get: function() {
-          passive = true;
-          return true;
-        }
-      });
-      window.addEventListener('test', null, options);
-      window.removeEventListener('test', null);
-      // eslint-disable-next-line no-empty
-    } catch (err) {}
-
-    return passive ? { passive: false } : false;
-  },
-  /**
-   * 合并配置参数
-   *
-   * @param {Object} options （必须）配置参数
-   * @return {Object} 处理后的配置参数
-   */
-  mergeConfig: function(options) {
-    var params = {};
-    var defaults = Mydrag.config;
-
-    for (var key in defaults) {
-      if (options && options[key] !== undefined) {
-        params[key] = options[key];
-      } else {
-        params[key] = defaults[key];
-      }
-    }
-
-    return params;
-  },
-  /**
-   * 获取浏览器中 Window 对象的宽高
-   *
-   * @return {Object} 返回以 width 和 height 为属性的对象
-   * @example
-   *    getWin().width  |  getWin().height
-   */
-  getWin: function() {
-    var docElem = window.document.documentElement;
-    return {
-      width: docElem.clientWidth,
-      height: docElem.clientHeight
-    };
   }
 };
 
