@@ -3,14 +3,20 @@
 <p align="center">🐾 拖拽移动设备上的任意元素</p>
 
 <p align="center">
-  <a href="https://www.npmjs.com/package/mydrag" target="_blank" rel="noopener noreferrer">
-    <img alt="npm" src="https://img.shields.io/npm/v/mydrag.svg?style=flat-square">
-  </a>
-  <a href="https://www.npmjs.com/package/mydrag" target="_blank" rel="noopener noreferrer">
-    <img alt="npm" src="https://img.shields.io/npm/dt/mydrag.svg?style=flat-square">
+  <a href="https://travis-ci.com/github/liuyib/mydrag" target="_blank" rel="noopener noreferrer">
+    <img alt="Travis CI" src="https://img.shields.io/travis/liuyib/mydrag.svg">
   </a>
   <a href="https://codecov.io/gh/liuyib/mydrag" target="_blank" rel="noopener noreferrer">
-    <img src="https://codecov.io/gh/liuyib/mydrag/branch/master/graph/badge.svg?style=flat-square" />
+    <img alt="Codecov" src="https://img.shields.io/codecov/c/github/liuyib/mydrag.svg">
+  </a>
+  <a href="https://www.npmjs.com/package/mydrag" target="_blank" rel="noopener noreferrer">
+    <img alt="npm" src="https://img.shields.io/npm/dt/mydrag.svg">
+  </a>
+  <a href="https://www.npmjs.com/package/mydrag" target="_blank" rel="noopener noreferrer">
+    <img alt="npm" src="https://img.shields.io/npm/v/mydrag.svg">
+  </a>
+  <a href="https://github.com/liuyib/mydrag/blob/master/LICENSE" target="_blank" rel="noopener noreferrer">
+    <img src="https://img.shields.io/github/license/liuyib/mydrag.svg" />
   </a>
 </p>
 
@@ -50,57 +56,39 @@ $ bower install liuyib/mydrag --save
 
 ## :package: 用法
 
-- 在 ES6 模块中使用
+首先，引入 `mydrag.js`：
 
-  HTML
+```js
+import Mydrag from 'mydrag';      // ES6
+// 或
+const Mydrag = require('Mydrag'); // CommonJS
+// 或
+<script src="https://cdn.jsdelivr.net/npm/mydrag/dist/mydrag.min.js"></script>
+// 或
+<script src="https://unpkg.com/mydrag/dist/mydrag.min.js"></script>
+```
 
-  ```html
-  <div id="drag"></div>
-  ```
+然后，准备一个元素：
 
-  JavaScript
+```html
+<div id="drag"></div>
+```
 
-  ```js
-  import Mydrag from 'mydrag';
+最后，使用：
 
-  // 用例 1（使用 `new`）
-  new Mydrag('#drag');
+```js
+// 用例 1（使用 new）
+new Mydrag('#drag');
 
-  // 用例 2（无 `new`）
-  Mydrag('#drag');
+// 用例 2（不用 new）
+Mydrag('#drag');
 
-  // 用例 3
-  Mydrag('#drag', {
-    initX: 100, // 100 px
-    initY: 100, // 100 px
-  });
-  ```
-
-- 在 `<script>` 中使用
-
-  HTML
-
-  ```html
-  <script src="https://cdn.jsdelivr.net/npm/mydrag/dist/mydrag.min.js"></script>
-  ...
-  <div id="drag"></div>
-  ```
-
-  JavaScript
-
-  ```js
-  // 用例 1（使用 `new`）
-  new Mydrag('#drag');
-
-  // 用例 2（无 `new`）
-  Mydrag('#drag');
-
-  // 用例 3
-  Mydrag('#drag', {
-    initX: 100, // 100 px
-    initY: 100, // 100 px
-  });
-  ```
+// 用例 3（传递参数）
+Mydrag('#drag', {
+  initX: 100, // 100 px
+  initY: 100, // 100 px
+});
+```
 
 ## :memo: 文档
 

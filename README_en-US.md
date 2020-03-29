@@ -3,14 +3,20 @@
 <p align="center">🐾 Drag any element on mobile device</p>
 
 <p align="center">
-  <a href="https://www.npmjs.com/package/mydrag" target="_blank" rel="noopener noreferrer">
-    <img alt="npm" src="https://img.shields.io/npm/v/mydrag.svg?style=flat-square">
-  </a>
-  <a href="https://www.npmjs.com/package/mydrag" target="_blank" rel="noopener noreferrer">
-    <img alt="npm" src="https://img.shields.io/npm/dt/mydrag.svg?style=flat-square">
+  <a href="https://travis-ci.com/github/liuyib/mydrag" target="_blank" rel="noopener noreferrer">
+    <img alt="Travis CI" src="https://img.shields.io/travis/liuyib/mydrag.svg">
   </a>
   <a href="https://codecov.io/gh/liuyib/mydrag" target="_blank" rel="noopener noreferrer">
-    <img src="https://codecov.io/gh/liuyib/mydrag/branch/master/graph/badge.svg?style=flat-square" />
+    <img alt="Codecov" src="https://img.shields.io/codecov/c/github/liuyib/mydrag.svg">
+  </a>
+  <a href="https://www.npmjs.com/package/mydrag" target="_blank" rel="noopener noreferrer">
+    <img alt="npm" src="https://img.shields.io/npm/dt/mydrag.svg">
+  </a>
+  <a href="https://www.npmjs.com/package/mydrag" target="_blank" rel="noopener noreferrer">
+    <img alt="npm" src="https://img.shields.io/npm/v/mydrag.svg">
+  </a>
+  <a href="https://github.com/liuyib/mydrag/blob/master/LICENSE" target="_blank" rel="noopener noreferrer">
+    <img src="https://img.shields.io/github/license/liuyib/mydrag.svg" />
   </a>
 </p>
 
@@ -50,57 +56,39 @@ Using unpkg CDN:
 
 ## :package: Usage
 
-- Used in ES6 module
+Firstly, Introducing `mydrag.js`:
 
-  HTML
+```js
+import Mydrag from 'mydrag';      // ES6
+// 或
+const Mydrag = require('Mydrag'); // CommonJS
+// 或
+<script src="https://cdn.jsdelivr.net/npm/mydrag/dist/mydrag.min.js"></script>
+// 或
+<script src="https://unpkg.com/mydrag/dist/mydrag.min.js"></script>
+```
 
-  ```html
-  <div id="drag"></div>
-  ```
+Secondly, Prepare an element:
 
-  JavaScript
+```html
+<div id="drag"></div>
+```
 
-  ```js
-  import Mydrag from 'mydrag';
+Finally, use:
 
-  // Use case 1 (With `new`)
-  new Mydrag('#drag');
+```js
+// Use case 1 (With new)
+new Mydrag('#drag');
 
-  // Use case 2 (No `new`)
-  Mydrag('#drag');
+// Use case 2 (No new)
+Mydrag('#drag');
 
-  // Use case 3
-  Mydrag('#drag', {
-    initX: 100, // 100 px
-    initY: 100, // 100 px
-  });
-  ```
-
-- Used in `<script>`
-
-  HTML
-
-  ```html
-  <script src="https://cdn.jsdelivr.net/npm/mydrag/dist/mydrag.min.js"></script>
-  ...
-  <div id="drag"></div>
-  ```
-
-  JavaScript
-
-  ```js
-  // Use case 1 (With `new`)
-  new Mydrag('#drag');
-
-  // Use case 2 (No `new`)
-  Mydrag('#drag');
-
-  // Use case 3
-  Mydrag('#drag', {
-    initX: 100, // 100 px
-    initY: 100, // 100 px
-  });
-  ```
+// Use case 3 (Width parameters)
+Mydrag('#drag', {
+  initX: 100, // 100 px
+  initY: 100, // 100 px
+});
+```
 
 ## :memo: Documentation
 
