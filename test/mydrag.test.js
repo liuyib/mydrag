@@ -1,4 +1,4 @@
-var expect = require('chai').expect;
-var Mydrag = require('../src/mydrag');
+import { expect } from 'chai';
+import Mydrag from '../src/mydrag';
 
 

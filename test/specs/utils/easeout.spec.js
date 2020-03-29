@@ -1,5 +1,5 @@
-var expect = require('chai').expect;
-var easeout = require('../../../src/utils').easeout;
+import { expect } from 'chai';
+import { easeout } from '../../../src/utils';
 
 describe('Mydrag::easeout', function() {
   it('should `undefined` when `oldPos === newPos`', function() {

@@ -1,5 +1,5 @@
-var expect = require('chai').expect;
-var mergeConfig = require('../../../src/utils').mergeConfig;
+import { expect } from 'chai';
+import { mergeConfig } from '../../../src/utils';
 
 describe('utils::mergeConfig', function() {
   it('should be immutable', function() {

@@ -1,5 +1,5 @@
-var expect = require('chai').expect;  
-var isNumber = require('../../../src/utils').isNumber;
+import { expect } from 'chai';
+import { isNumber } from '../../../src/utils';
 
 describe('utils::isXxx', function() {
   it('should validate Number', function() {

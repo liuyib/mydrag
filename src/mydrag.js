@@ -8,7 +8,7 @@
 
 'use strict';
 
-var utils = require('./utils');
+import * as utils from './utils';
 
 /**
  * Mydrag 类
@@ -370,4 +370,4 @@ Mydrag.fn = Mydrag.prototype = {
 
 Mydrag.fn.init.prototype = Mydrag.fn;
 
-module.exports = Mydrag;
+export default Mydrag;

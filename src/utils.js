@@ -6,7 +6,7 @@
  * @param {Object} val 待判断的值
  * @return {boolean} 如果是数值返回 true，否则返回 false
  */
-function isNumber(val) {
+export function isNumber(val) {
   return typeof val === 'number';
 }
 
@@ -17,7 +17,7 @@ function isNumber(val) {
  * @param {Object} newOpts 传入的配置参数
  * @return {Object} 合并后的配置参数
  */
-function mergeConfig(oldOpts, newOpts) {
+export function mergeConfig(oldOpts, newOpts) {
   var params = {};
 
   for (var key in oldOpts) {
@@ -39,7 +39,7 @@ function mergeConfig(oldOpts, newOpts) {
  * @param {number=} rate  （可选）缓动速率
  * @return {number} 根据起始位置计算一次后的数值
  */
-function easeout(oldPos, newPos, rate, threshold) {
+export function easeout(oldPos, newPos, rate, threshold) {
   if (oldPos === newPos) {
     return;
   }
@@ -70,8 +70,7 @@ function easeout(oldPos, newPos, rate, threshold) {
  *
  * getWinSize().height
  */
-/* istanbul ignore next */
-function getWinSize() {
+export function getWinSize() {
   var docElem = window.document.documentElement;
   return {
     width: docElem.clientWidth,
@@ -85,8 +84,7 @@ function getWinSize() {
  * @return {(Object | boolean)} 当前环境支持 passive 参数时
  *    返回 { passive: false }，否则返回 false
  */
-/* istanbul ignore next */
-function detectPassive() {
+export function detectPassive() {
   var passive = false;
 
   try {
@@ -103,11 +101,3 @@ function detectPassive() {
 
   return passive ? { passive: false } : false;
 }
-
-module.exports = {
-  isNumber: isNumber,
-  mergeConfig: mergeConfig,
-  easeout: easeout,
-  getWinSize: getWinSize,
-  detectPassive: detectPassive
-};
