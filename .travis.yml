@@ -1,0 +1,18 @@
+language: node_js
+
+node_js:
+  - 10
+
+# 使用 xvfb 来模拟显示 GUI
+services:
+  - xvfb
+
+# 指定要使用的浏览器以及版本
+addons:
+  chrome: stable
+
+script:
+  - npm run test
+
+after_script:
+  - npm run codecov
