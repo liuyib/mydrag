@@ -259,18 +259,18 @@ Mydrag.fn = Mydrag.prototype = {
     this.x = this.initX + deltaX;
     this.y = this.initY + deltaY;
 
+    // 边缘检测
+    this.detectEdge();
+
+    // 区域检测
+    this.detectArea();
+
     // 应用新坐标
     this.setPos(this.x, this.y);
 
     // 缓存新的坐标（被用作下一次移动之前的初始坐标）
     this.newX = this.x;
     this.newY = this.y;
-
-    // 边缘检测
-    this.detectEdge();
-
-    // 区域检测
-    this.detectArea();
   },
   /**
    * 释放元素时调用
