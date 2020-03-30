@@ -99,8 +99,6 @@ Mydrag.fn = Mydrag.prototype = {
     this.gap = this.config.gap;
     // 区域 ID（0：屏幕左半边，1：屏幕右半边）
     this.areaId = 0;
-    // 用户是否正在触摸元素
-    this.isTouching = false;
 
     this.initData();
     this.addListening();
@@ -198,8 +196,6 @@ Mydrag.fn = Mydrag.prototype = {
            */
           this.resize();
           break;
-        default:
-          break;
       }
     }.bind(this)(e.type, Mydrag.events);
   },
@@ -213,9 +209,7 @@ Mydrag.fn = Mydrag.prototype = {
       event.preventDefault();
     }
 
-    var ev = (event.touches && event.touches[0]) || event;
-
-    this.isTouching = true;
+    var ev = event.touches ? event.touches[0] : event;
 
     // 每次移动前的初始坐标是上一次移动后的坐标
     if (this.newX) {
@@ -235,14 +229,11 @@ Mydrag.fn = Mydrag.prototype = {
    * @param {Object} event （必须）事件对象
    */
   touchMove: function(event) {
-    if (!this.isTouching) {
-      return;
-    }
     if (event.cancelable) {
       event.preventDefault();
     }
 
-    var ev = (event.touches && event.touches[0]) || event;
+    var ev = event.touches ? event.touches[0] : event;
 
     // 移动的距离
     var deltaX = ev.clientX - this.oldX;
@@ -269,27 +260,16 @@ Mydrag.fn = Mydrag.prototype = {
    * 释放元素时调用
    */
   touchEnd: function() {
-    if (!this.isTouching) {
-      return;
-    }
-
-    this.isTouching = false;
     // 移除事件监听器
     this.removeListener();
 
     if (this.config.adsorb) {
-      var minX = this.limit.l;
-      var maxX = this.limit.r;
       var area = this.areaId;
-      var rate = this.config.rate;
-      var targetX = area === 0 ? minX : area === 1 ? maxX : this.x;
+      var targetX =
+        area === 0 ? this.limit.l : area === 1 ? this.limit.r : this.x;
 
       var anime = function() {
-        if (this.isTouching) {
-          return;
-        }
-
-        var calcX = utils.easeout(this.x, targetX, rate);
+        var calcX = utils.easeout(this.x, targetX, this.config.rate);
 
         if (calcX !== undefined) {
           this.x = calcX;
