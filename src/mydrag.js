@@ -62,6 +62,9 @@ Mydrag.fn = Mydrag.prototype = {
       return;
     }
 
+    // 存储位置时，使用的 Key
+    this.storeKey = selector;
+
     // 元素的 getBoundingClientRect 方法的返回值
     this.rect = null;
 
@@ -129,6 +132,9 @@ Mydrag.fn = Mydrag.prototype = {
     this.initX = this.oldX = this.newX = initX;
     this.initY = this.oldY = this.newY = initY;
     this.setPos(initX, initY);
+
+    // 恢复存储的元素位置
+    this.gainPos();
   },
   /**
    * 添加事件监听
@@ -284,10 +290,13 @@ Mydrag.fn = Mydrag.prototype = {
           requestAnimationFrame(anime);
         } else {
           this.newX = targetX;
+          this.savePos();
         }
       }.bind(this);
 
       anime();
+    } else {
+      this.savePos();
     }
   },
   /**
@@ -356,6 +365,31 @@ Mydrag.fn = Mydrag.prototype = {
     var val = [newX + 'px', newY + 'px'].join(',');
 
     this.elem.style.transform = 'translate(' + val + ')';
+  },
+  /**
+   * 存储元素位置
+   */
+  savePos: function() {
+    var x = parseInt(this.x, 10);
+    var y = parseInt(this.y, 10);
+    localStorage.setItem('Mydarg_' + this.storeKey + '_x', x);
+    localStorage.setItem('Mydarg_' + this.storeKey + '_y', y);
+  },
+  /**
+   * 恢复元素位置
+   */
+  gainPos: function() {
+    var x = localStorage.getItem('Mydarg_' + this.storeKey + '_x');
+    var y = localStorage.getItem('Mydarg_' + this.storeKey + '_y');
+
+    if (x !== null) {
+      this.newX = parseInt(x, 10);
+    }
+    if (y !== null) {
+      this.newY = parseInt(y, 10);
+    }
+
+    this.setPos(this.newX, this.newY);
   }
 };
 
