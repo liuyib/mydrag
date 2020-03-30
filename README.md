@@ -103,6 +103,38 @@ Mydrag('#drag', {
   - **options.initY** (number)：初始 `y` 坐标（**可选**。默认：`0`，单位：`px`）
   - **options.gap** (number)：元素距离边缘的间隙（**可选**。默认：`10`，单位：`px`）
 
+## :bulb: 二次开发
+
+安装所需依赖：
+
+```bash
+$ npm install
+```
+
+修改代码之前，请执行：
+
+```bash
+$ npm run dev
+```
+
+> 该指令的作用是：自动监听代码变动，并打包生成 `mydrag.min.js`。
+
+或者不执行 `npm run dev`，当修改完代码时，执行：
+
+```bash
+$ npm run build
+```
+
+编写测试之前，请执行：
+
+```bash
+$ npm run test
+```
+
+查看测试覆盖率，请在浏览器中运行 `coverage/lcov-report` 目录下的 `index.html` 文件。
+
+> 该文件和目录需要执行 `npm run test` 才会生成。
+
 ## :handshake: 开源协议
 
 [MIT](https://github.com/liuyib/mydrag/blob/master/LICENSE) Copyright (c) 2020 [liuyib](https://github.com/liuyib/)
