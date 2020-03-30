@@ -97,8 +97,8 @@ Mydrag.fn = Mydrag.prototype = {
     };
     // 安全边距
     this.gap = this.config.gap;
-    // 区域 ID（0：屏幕左半边，1：屏幕右半边）
-    this.areaId = 0;
+    // 是否处于屏幕左半区域
+    this.isLeftArea = true;
 
     this.initData();
     this.addListening();
@@ -264,13 +264,19 @@ Mydrag.fn = Mydrag.prototype = {
     this.removeListener();
 
     if (this.config.adsorb) {
-      var area = this.areaId;
-      var targetX =
-        area === 0 ? this.limit.l : area === 1 ? this.limit.r : this.x;
+      var targetX = 0;
+
+      /* istanbul ignore next */
+      if (this.isLeftArea) {
+        targetX = this.limit.l;
+      } else {
+        targetX = this.limit.r;
+      }
 
       var anime = function() {
         var calcX = utils.easeout(this.x, targetX, this.config.rate);
 
+        /* istanbul ignore else */
         if (calcX !== undefined) {
           this.x = calcX;
           this.newX = calcX;
@@ -299,7 +305,7 @@ Mydrag.fn = Mydrag.prototype = {
     var winCenterX = this.winW / 2;
     var elemCenterX = this.x + this.rect.width / 2;
 
-    this.areaId = elemCenterX < winCenterX ? 0 : 1;
+    this.isLeftArea = elemCenterX < winCenterX;
   },
   /**
    * 边缘检测
@@ -311,24 +317,29 @@ Mydrag.fn = Mydrag.prototype = {
     var elemT = this.y;
     var elemB = elemT + this.rect.height;
 
+    /* istanbul ignore if */
     if (elemL <= this.gap) {
       isOverflow = true;
       this.x = this.limit.l;
     }
+    /* istanbul ignore if */
     if (elemR >= this.winW - this.gap) {
       isOverflow = true;
       this.x = this.limit.r;
     }
+    /* istanbul ignore if */
     if (elemT <= this.gap) {
       isOverflow = true;
       this.y = this.limit.t;
     }
+    /* istanbul ignore if */
     if (elemB >= this.winH - this.gap) {
       isOverflow = true;
       this.y = this.limit.b;
     }
 
     // 元素位置超出范围时进行限制
+    /* istanbul ignore if */
     if (isOverflow) {
       this.setPos(this.x, this.y);
     }

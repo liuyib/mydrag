@@ -57,6 +57,7 @@ describe('Mydrag class', function() {
     }
 
     Mydrag('.drag');
+    // Drag when using default configuration.
     mockDragMove();
   });
 
