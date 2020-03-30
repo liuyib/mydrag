@@ -84,6 +84,7 @@ export function getWinSize() {
  * @return {(Object | boolean)} 当前环境支持 passive 参数时
  *    返回 { passive: false }，否则返回 false
  */
+/* istanbul ignore next */
 export function detectPassive() {
   var passive = false;
 
