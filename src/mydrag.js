@@ -98,10 +98,15 @@ Mydrag.fn = Mydrag.prototype = {
       t: 0, // top
       b: 0 // bottom
     };
+
     // 安全边距
     this.gap = this.config.gap;
+
     // 是否处于屏幕左半区域
     this.isLeftArea = true;
+
+    // 用户是否正在触摸元素
+    this.isTouching = false;
 
     this.initData();
     this.addListening();
@@ -217,6 +222,8 @@ Mydrag.fn = Mydrag.prototype = {
 
     var ev = event.touches ? event.touches[0] : event;
 
+    this.isTouching = true;
+
     // 每次移动前的初始坐标是上一次移动后的坐标
     if (this.newX) {
       this.initX = this.newX;
@@ -235,6 +242,9 @@ Mydrag.fn = Mydrag.prototype = {
    * @param {Object} event （必须）事件对象
    */
   touchMove: function(event) {
+    if (!this.isTouching) {
+      return;
+    }
     if (event.cancelable) {
       event.preventDefault();
     }
@@ -266,6 +276,11 @@ Mydrag.fn = Mydrag.prototype = {
    * 释放元素时调用
    */
   touchEnd: function() {
+    if (!this.isTouching) {
+      return;
+    }
+
+    this.isTouching = false;
     // 移除事件监听器
     this.removeListener();
 
@@ -280,6 +295,10 @@ Mydrag.fn = Mydrag.prototype = {
       }
 
       var anime = function() {
+        if (this.isTouching) {
+          return;
+        }
+
         var calcX = utils.easeout(this.x, targetX, this.config.rate);
 
         /* istanbul ignore else */
