@@ -4,19 +4,19 @@
 
 <p align="center">
   <a href="https://travis-ci.com/github/liuyib/mydrag" target="_blank" rel="noopener noreferrer">
-    <img alt="Travis CI" src="https://img.shields.io/travis/liuyib/mydrag.svg">
+    <img alt="Travis CI" src="https://img.shields.io/travis/com/liuyib/mydrag">
   </a>
   <a href="https://codecov.io/gh/liuyib/mydrag" target="_blank" rel="noopener noreferrer">
-    <img alt="Codecov" src="https://img.shields.io/codecov/c/github/liuyib/mydrag.svg">
+    <img alt="Codecov" src="https://img.shields.io/codecov/c/github/liuyib/mydrag">
   </a>
   <a href="https://www.npmjs.com/package/mydrag" target="_blank" rel="noopener noreferrer">
-    <img alt="npm" src="https://img.shields.io/npm/dt/mydrag.svg">
+    <img alt="npm" src="https://img.shields.io/npm/dt/mydrag">
   </a>
   <a href="https://www.npmjs.com/package/mydrag" target="_blank" rel="noopener noreferrer">
-    <img alt="npm" src="https://img.shields.io/npm/v/mydrag.svg">
+    <img alt="npm" src="https://img.shields.io/npm/v/mydrag">
   </a>
   <a href="https://github.com/liuyib/mydrag/blob/master/LICENSE" target="_blank" rel="noopener noreferrer">
-    <img src="https://img.shields.io/github/license/liuyib/mydrag.svg" />
+    <img src="https://img.shields.io/github/license/liuyib/mydrag" />
   </a>
 </p>
 
@@ -86,7 +86,7 @@ Mydrag('#drag');
 // Use case 3 (Width parameters)
 Mydrag('#drag', {
   initX: 100, // 100 px
-  initY: 100, // 100 px
+  initY: 100 // 100 px
 });
 ```
 
