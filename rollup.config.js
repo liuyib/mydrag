@@ -13,7 +13,7 @@ export default {
       format: 'umd',
       // 生成 iife / umd 包的名称
       name: 'Mydrag',
-      banner: `/*!\n * mydrag.js v1.0.0\n * (c) 2020 liuyib <https://github.com/liuyib>\n * Released under the MIT License.\n */`,
+      banner: `/*!\n * mydrag.js v1.0.1\n * (c) 2020 liuyib <https://github.com/liuyib>\n * Released under the MIT License.\n */`,
       plugins: [terser()]
     }
   ],

@@ -1,6 +1,6 @@
 {
   "name": "mydrag",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "🐾 Drag any element on mobile device",
   "homepage": "https://github.com/liuyib/mydrag",
   "main": "src/mydrag.js",

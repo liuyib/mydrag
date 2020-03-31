@@ -2,7 +2,7 @@
  * @file        mydrag.js
  * @author      liuyib(https://github.com/liuyib)
  * @date        2020/3/15
- * @version     1.0.0
+ * @version     1.0.1
  * @description 拖动任意元素，自动吸附边缘
  */
 
